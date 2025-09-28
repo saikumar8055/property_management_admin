@@ -11,6 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/properties")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class PropertyController {
     private final PropertyService propertyService;
 
