@@ -14,8 +14,6 @@ public class OwnerSignUpRequestDTO {
     @NotBlank
     private String password;
     @NotBlank
-    private String personalAddress;
-    @NotBlank
-    private String mobilePrimary;
-    private String mobileSecondary;
+    private String address;
+    private MobileNumberDto mobileNumber;
 }

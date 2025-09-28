@@ -1,19 +1,23 @@
 package com.property.management.service.impl;
 
-import com.property.management.dto.*;
+import com.property.management.dto.ApiResponseDTO;
+import com.property.management.dto.OwnerSignInRequestDTO;
+import com.property.management.dto.OwnerSignUpRequestDTO;
+import com.property.management.dto.SignInResponseDTO;
 import com.property.management.model.Owner;
 import com.property.management.repository.OwnerRepository;
 import com.property.management.service.OwnerService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class OwnerServiceImpl implements OwnerService {
+
     private final OwnerRepository ownerRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public ApiResponseDTO signUp(OwnerSignUpRequestDTO request) {
@@ -23,10 +27,10 @@ public class OwnerServiceImpl implements OwnerService {
         Owner owner = Owner.builder()
                 .name(request.getName())
                 .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .personalAddress(request.getPersonalAddress())
-                .mobilePrimary(request.getMobilePrimary())
-                .mobileSecondary(request.getMobileSecondary())
+                .password(request.getPassword())
+                .personalAddress(request.getAddress())
+                .mobilePrimary(String.valueOf(request.getMobileNumber().getPrimary()))
+                .mobileSecondary(String.valueOf(request.getMobileNumber().getSecondary()))
                 .build();
         ownerRepository.save(owner);
         return new ApiResponseDTO("Successfully registered");
@@ -39,10 +43,10 @@ public class OwnerServiceImpl implements OwnerService {
             ownerOpt = ownerRepository.findByName(request.getEmailOrName());
         }
         Owner owner = ownerOpt.orElseThrow(() -> new RuntimeException("Invalid credentials"));
-        if (!passwordEncoder.matches(request.getPassword(), owner.getPassword())) {
+        if (!StringUtils.pathEquals(request.getPassword(), owner.getPassword())) {
             throw new RuntimeException("Invalid credentials");
         }
-        return new SignInResponseDTO(owner.getId());
+        return new SignInResponseDTO(owner.getId(), owner.getName());
     }
 
     @Override
