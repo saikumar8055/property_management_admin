@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -15,7 +16,7 @@ import java.util.List;
 public class PropertyController {
     private final PropertyService propertyService;
 
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<Long> registerProperty(@Valid @RequestBody PropertyRegisterRequestDTO request) {
         return ResponseEntity.ok(propertyService.registerProperty(request));
     }
@@ -26,7 +27,7 @@ public class PropertyController {
         return ResponseEntity.ok(new ApiResponseDTO("Tenant registered successfully"));
     }
 
-    @GetMapping
+    @GetMapping("/user")
     public ResponseEntity<List<PropertyDetailsResponseDTO>> getProperties(@RequestParam Long userId) {
         return ResponseEntity.ok(propertyService.getPropertiesByUserId(userId));
     }
