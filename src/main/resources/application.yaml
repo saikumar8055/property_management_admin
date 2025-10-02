@@ -1,8 +1,15 @@
 spring:
+  cloud:
+    azure:
+      keyvault:
+        secret:
+          property-sources:
+            - endpoint: https://property-management-kv.vault.azure.net/
+
   datasource:
     url: jdbc:sqlserver://property-management.database.windows.net:1433;database=property-management-db;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
-    username: propertymanagementadmin@property-management
-    password: Test#8055
+    username: ${db-username}
+    password: ${db-password}
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
 
   jpa:
